@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ shop.name }}の詳細{% endblock %}
+
+{% block content %}
+<h1>{{ shop.name }}</h1>
+<p>{{ shop.address }}</p>
+<p>{{ shop.opening_hours }}</p>
+{% if error_message %}
+    <p class="error">{{ error_message }}</p>
+{% endif %}
+<form method="post" action="{% url 'ramen_app:add_review' shop.id %}">
+    {% csrf_token %}
+    <label>評価:</label>
+    <input type="number" name="rating" min="1" max="5" required>
+    <label>コメント:</label>
+    <textarea name="comment" required></textarea>
+    <button type="submit">レビューを追加</button>
+</form>
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+
+<form method="post" action="{% url 'ramen_app:like_shop' shop.id %}">
+    {% csrf_token %}
+    {% if user.is_authenticated %}
+        {% if is_liked %}
+            <button type="submit">いいねを解除</button>
+        {% else %}
+            <button type="submit">いいね</button>
+        {% endif %}
+    {% else %}
+        <p>いいねするにはログインが必要です。</p>
+    {% endif %}
+</form>
+
+<p>この店舗のいいね数: {{ shop.likes_set.count }}</p>
+
+<h2>レビュー一覧</h2>
+<ul>
+    {% for review in shop.reviews.all %}
+        <li>
+            {{ review.user.username }}: {{ review.rating }} - {{ review.comment }}
+            {% if review.user == request.user %}
+                <a href="{% url 'ramen_app:edit_review' review.id %}">編集</a>
+                <a href="{% url 'ramen_app:delete_review' review.id %}">削除</a>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+<script>
+    document.querySelector('form[action$="/review/"]').addEventListener('submit', async function (event) {
+        event.preventDefault(); // ページリロードを防ぐ
+        const form = event.target;
+        const formData = new FormData(form);
+        
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+    
+            const result = await response.json();
+            if (response.ok) {
+                alert(result.message); // 成功メッセージを表示
+                form.reset(); // フォームをリセット
+            } else {
+                alert(result.error || 'エラーが発生しました。');
+            }
+        } catch (error) {
+            alert('通信エラーが発生しました。');
+            console.error(error);
+        }
+    });
+    </script>
+    
+{% endblock %}

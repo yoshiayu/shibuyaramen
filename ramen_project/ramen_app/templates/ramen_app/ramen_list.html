@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}ラーメン店舗一覧{% endblock %}
+
+{% block content %}
+<!-- Leaflet.js のスタイルとスクリプトの読み込み -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+    #map {
+        height: 500px;
+        width: 100%;
+        margin-top: 20px;
+    }
+</style>
+
+<div class="container">
+    <h1 class="title">🍜 ラーメン店舗一覧 🍜</h1>
+    <form method="get" class="search-form">
+        <input type="text" name="q" class="search-input" placeholder="店舗名や特徴で検索" value="{{ query }}">
+        <button type="submit" class="search-button">検索</button>
+    </form>
+    
+    <!-- 地図描画エリア -->
+    <div id="map"></div>
+
+    <div class="shops-list">
+        {% for shop in shops %}
+        <div class="shop-card">
+            <img 
+                src="{% if shop.image_url %}{{ shop.image_url }}{% else %}{% static 'images/default.webp' %}{% endif %}" 
+                alt="{{ shop.name }}" 
+                class="shop-image">
+            <h2 class="shop-name">{{ shop.name }}</h2>
+            <p class="shop-distance">🚶 {{ shop.distance_from_station }}</p>
+            <p class="shop-features">{{ shop.features }}</p>
+            <a href="{% url 'ramen_app:ramen_detail' shop.id %}" class="details-link">詳しく見る ➡️</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    // 地図初期化
+    const map = L.map('map').setView([35.658581, 139.745433], 12); // デフォルトは東京タワー付近
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    locations.forEach(location => {
+        if (location.lat && location.lng) {
+            L.marker([location.lat, location.lng])
+                .addTo(map)
+                .bindPopup(`<b>${location.name}</b><br>${location.distance}`);
+        }
+    });
+
+    // 店舗データを地図に表示
+    const locations = [
+        {% for shop in shops %}
+        {
+            name: "{{ shop.name }}",
+            lat: {{ shop.latitude|default:"null" }},
+            lng: {{ shop.longitude|default:"null" }},
+            distance: "{{ shop.distance_from_station }}"
+        },
+        {% endfor %}
+    ];
+
+    locations.forEach(location => {
+        if (location.lat && location.lng) {
+            L.marker([location.lat, location.lng])
+                .addTo(map)
+                .bindPopup(`<b>${location.name}</b><br>${location.distance}`);
+        }
+    });
+</script>
+{% endblock %}
