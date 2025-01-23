@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}レビュー編集{% endblock %}
+
+{% block content %}
+<h1>レビュー編集</h1>
+<form method="post">
+    {% csrf_token %}
+    <label>評価:</label>
+    <input type="number" name="rating" min="1" max="5" value="{{ review.rating }}">
+    <label>コメント:</label>
+    <textarea name="comment">{{ review.comment }}</textarea>
+    <button type="submit">更新</button>
+</form>
+{% endblock %}

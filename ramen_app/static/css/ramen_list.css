@@ -1,0 +1,116 @@
+/* 全体のスタイル */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+/* コンテナ */
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* タイトル */
+.title {
+    text-align: center;
+    color: #ff6347;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* 検索フォーム */
+.search-form {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    flex: 1;
+    max-width: 600px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.search-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #ff6347;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.search-button:hover {
+    background-color: #e55341;
+}
+
+/* 店舗リスト */
+.shops-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* 店舗カード */
+.shop-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.shop-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 店舗名 */
+.shop-name {
+    font-size: 18px;
+    color: #333;
+    margin: 0 0 10px;
+}
+
+/* 駅からの距離 */
+.shop-distance {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+/* 特徴 */
+.shop-features {
+    font-size: 14px;
+    color: #444;
+    margin-bottom: 10px;
+}
+
+/* 詳細リンク */
+.details-link {
+    display: inline-block;
+    text-decoration: none;
+    color: #fff;
+    background-color: #007bff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.details-link:hover {
+    background-color: #0056b3;
+}

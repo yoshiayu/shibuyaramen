@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ラーメンアプリ{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ramen_list.css' %}">
+    
+
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="{% url 'ramen_app:ramen_list' %}">ホーム</a>
+            {% if user.is_authenticated %}
+                <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" style="background: none; border: none; cursor: pointer; color: blue; text-decoration: underline;">
+                        ログアウト
+                    </button>
+                </form>
+            {% else %}
+                <a href="{% url 'ramen_app:login' %}">ログイン</a>
+                <a href="{% url 'ramen_app:signup' %}">アカウント登録</a>
+            {% endif %}
+        </nav>
+    </header>
+    
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
